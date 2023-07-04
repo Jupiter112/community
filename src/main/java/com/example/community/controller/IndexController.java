@@ -10,12 +10,11 @@ created by laq 20230703
  */
 
 @Controller
-public class HelloController {
+public class IndexController {
 
-    @GetMapping("/hello")
-    public String Hello(@RequestParam(name="name") String name, Model model){
-        model.addAttribute("name", name);
-        return "hello";
+    @GetMapping("/")
+    public String Index(){
+        return "index";
 
     }
 }
