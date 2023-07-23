@@ -23,18 +23,20 @@ public class IndexController {
     @GetMapping("/")
     public String Index(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
-        for(Cookie cookie: cookies){
-            if(cookie.getName().equals("token")){
-                String token = cookie.getValue();
-                if(token==null){
-                    System.out.println("token is null");
+        if(cookies!=null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    String token = cookie.getValue();
+                    User user = userMapper.findByToken(token);
+                    if (user != null) {
+                        System.out.println("name: "+cookie.getName()+"\t value: "+cookie.getValue());
+                        request.getSession().setAttribute("user", user);
+                    }
+                    break;
                 }
-                User user = userMapper.findByToken(token);
-                if(user!=null){
-                    request.getSession().setAttribute("user", user);
-                }
-                break;
             }
+        }else{
+            System.out.println("cookies is null");
         }
 
 
