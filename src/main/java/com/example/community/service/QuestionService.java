@@ -1,5 +1,6 @@
 package com.example.community.service;
 
+import com.example.community.dto.PaginationDTO;
 import com.example.community.dto.QuestionDTO;
 import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
@@ -20,9 +21,31 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<QuestionDTO> list() {
-        List<Question> questionList = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+
+        Integer totalCount = questionMapper.count(); // 数据总数
+        PaginationDTO paginationDTO = new PaginationDTO();
+
+        Integer totalPage; // 计算总页数
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+
+        if(page<1){
+            page = 1;
+        }
+        if(page>totalPage){
+            page = totalPage;
+        }
+
+        // size*(page-1)
+        Integer offset = size*(page-1);
+        paginationDTO.setPagination(totalPage, page);
+        List<Question> questionList = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+
         for(Question question: questionList){
             User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -30,6 +53,8 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        paginationDTO.setQuestions(questionDTOList);
+
+        return paginationDTO;
     }
 }
