@@ -1,5 +1,6 @@
 package com.example.community.model;
 
+import com.example.community.dto.QuestionDTO;
 import lombok.Data;
 
 @Data
