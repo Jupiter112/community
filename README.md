@@ -28,3 +28,6 @@ create table user
     gmt_modified bigint       null
 );
 ```
+```bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```
