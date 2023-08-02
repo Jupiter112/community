@@ -2,6 +2,9 @@ package com.example.community.service;
 
 import com.example.community.dto.PaginationDTO;
 import com.example.community.dto.QuestionDTO;
+import com.example.community.exception.CustomizeErrorCode;
+import com.example.community.exception.CustomizeException;
+import com.example.community.mapper.QuestionExpMapper;
 import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.Question;
@@ -19,6 +22,9 @@ import java.util.List;
 public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExpMapper questionExpMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -101,6 +107,9 @@ public class QuestionService {
 
     public QuestionDTO findById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if(question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setUser(user);
@@ -122,7 +131,19 @@ public class QuestionService {
             question1.setTag(question.getTag());
             QuestionExample example = new QuestionExample();
             example.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(question1, example);
+            int updated = questionMapper.updateByExampleSelective(question1, example);
+            if(updated!=1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void incView(Integer id) {
+        // 获取该问题原本的阅读数
+        Question record = new Question();
+        record.setId(id);
+        record.setViewCount(1);
+        questionExpMapper.incView(record);
+
     }
 }
