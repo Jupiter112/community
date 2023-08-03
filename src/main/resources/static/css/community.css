@@ -12,9 +12,18 @@ body{
     margin-bottom: 15px;
 }
 
+.btn-comment{
+    float: right;
+    margin-bottom: 15px;
+}
+
 .media-object{
     width: 38px;
     height: 38px;
+}
+
+.media-body{
+    padding-top: 10px;
 }
 
 .text-desc{
@@ -35,5 +44,28 @@ body{
 .jumbotron{
     margin: 50px;
 }
+
+.comment{
+    margin: 10px 0;
+}
+
+.comment-text{
+    margin-top: 5px;
+}
+
+.comment-menu{
+    margin-top: 5px;
+    color: #999;
+}
+
+.comment-menu .glyphicon{
+    margin-right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.comment-menu .glyphicon:hover{
+    color: #499ef3;
+}
+
 
 
